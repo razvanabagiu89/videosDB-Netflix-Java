@@ -1,11 +1,12 @@
 package main;
 
-import checker.Checkstyle;
 import checker.Checker;
+import checker.Checkstyle;
 import common.Constants;
 import fileio.Input;
 import fileio.InputLoader;
 import fileio.Writer;
+import functions.*;
 import org.json.simple.JSONArray;
 
 import java.io.File;
@@ -24,9 +25,9 @@ public final class Main {
      */
     private Main() {
     }
-
     /**
      * Call the main checker and the coding style checker
+     *
      * @param args from command line
      * @throws IOException in case of exceptions to reading / writing
      */
@@ -36,7 +37,6 @@ public final class Main {
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
-
         File outputDirectory = new File(Constants.RESULT_PATH);
 
         Checker checker = new Checker();
@@ -51,12 +51,10 @@ public final class Main {
                 action(file.getAbsolutePath(), filepath);
             }
         }
-
         checker.iterateFiles(Constants.RESULT_PATH, Constants.REF_PATH, Constants.TESTS_PATH);
         Checkstyle test = new Checkstyle();
         test.testCheckstyle();
     }
-
     /**
      * @param filePath1 for input file
      * @param filePath2 for output file
@@ -70,8 +68,70 @@ public final class Main {
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
-        //TODO add here the entry point to your implementation
+        // entry point
+        for (int i = 0; i < input.getCommands().size(); i++) {
 
+            if (input.getCommands().get(i).getActionType().equals("command")) {
+                if (input.getCommands().get(i).getType().equals("view")) {
+                    CommandView.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getType().equals("favorite")) {
+                    CommandFavourite.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getType().equals("rating")) {
+                    CommandRating.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                }
+            }
+
+            if (input.getCommands().get(i).getActionType().equals("recommendation")) {
+                if (input.getCommands().get(i).getType().equals("standard")) {
+                    RecommendationStandard.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getType().equals("best_unseen")) {
+                    RecommendationBestUnseen.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getType().equals("popular")) {
+                    RecommendationPopular.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getType().equals("favorite")) {
+                    RecommendationFavorite.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getType().equals("search")) {
+                    RecommendationSearch.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                }
+            }
+
+            if (input.getCommands().get(i).getActionType().equals("query")) {
+                if (input.getCommands().get(i).getObjectType().equals("actors")) {
+                    if (input.getCommands().get(i).getCriteria().equals("average")) {
+                        QueryActorsAverage.func(input, fileWriter, arrayResult,
+                                input.getCommands().get(i), i);
+                    } else if (input.getCommands().get(i).getCriteria().equals("awards")) {
+                        QueryActorsAwards.func(input, fileWriter, arrayResult,
+                                input.getCommands().get(i));
+                    } else if (input.getCommands().get(i).
+                            getCriteria().equals("filter_description")) {
+                        QueryActorsFilterDescription.func(input, fileWriter, arrayResult,
+                                input.getCommands().get(i));
+                    }
+                } else if (input.getCommands().get(i).getObjectType().equals("users")) {
+                    QueryUser.func(input, fileWriter, arrayResult, input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getCriteria().equals("favorite")) {
+                    QueryFavorite.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getCriteria().equals("most_viewed")) {
+                    QueryMostViewed.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                } else if (input.getCommands().get(i).getCriteria().equals("longest")) {
+                    QueryDuration.func(input, fileWriter, arrayResult, input.getCommands().get(i));
+                } else if (input.getCommands().get(i).getCriteria().equals("ratings")) {
+                    QueryRating.func(input, fileWriter, arrayResult,
+                            input.getCommands().get(i), i);
+                }
+            }
+        }
         fileWriter.closeJSON(arrayResult);
     }
 }
