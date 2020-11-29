@@ -2,13 +2,15 @@ package common;
 
 /**
  * The class contains the minimum of constants needed.
- *
+ * <p>
  * You can define your own constants here or create separate files.
  */
 public final class Constants {
     private Constants() {
     }
 
+    // Query actors awards
+    public static final int AWARD = 3;
     public static final String DATABASE = "database";
     public static final String ACTORS = "actors";
     public static final String MOVIES = "movies";

@@ -27,6 +27,8 @@ In the 'utils' package I added two functions for initializing the input in
 every action and to initialize all users from the database at the start of
 every action.
 
+In the 'constants' package I added a constant for awards.
+
 For storing the titles and ratings, number of views, number of occurences
 and awards I used Hashmaps due to the unique key advantage.
 
@@ -108,4 +110,5 @@ action.
 -> RecommendationStandard
  - outputs the first unseen video for the user in the action
 from the video database.
+
 
